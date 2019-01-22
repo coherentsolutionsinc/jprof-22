@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "com.issoft.meetup.proto";
+
+message EchoRequest {
+    string value = 1;
+}
+
+message EchoResponse {
+    string value = 1;
+}
+
+service EchoService {
+    rpc echo(EchoRequest) returns (EchoResponse);
+}

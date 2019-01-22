@@ -1,0 +1,26 @@
+subdomain-env: app2.local.com
+static-root: /static/app2
+
+api:
+  - context-path: /api
+    upstream-name: app2
+    upstream-url: host.docker.internal:8092
+    locations:
+      - url: /test1/{id}
+        roles: ['TEST_ROLE']
+      - url: /user/get
+        roles: ['TEST_ROLE2']
+      - url: /user/put
+        roles: ['TEST_ROLE']
+      - url: /user/add
+        roles: ['TEST_ROLE']
+      - url: /user/all
+        roles: ['TEST_ROLE']
+      - url: /user/stream
+        roles: ['TEST_ROLE2']
+  - context-path: /api/auth
+    upstream-name: authapp
+    upstream-url: host.docker.internal:8090
+    locations:
+      - url: /oauth/token
+        security: none

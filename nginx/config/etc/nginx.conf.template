@@ -1,0 +1,69 @@
+worker_processes  2;
+error_log /dev/stderr warn;
+
+events {
+    worker_connections 1024;
+}
+
+# make sure to set plaintext JWT_SECRET environment variable
+env JWT_SECRET;
+
+http {
+    log_format main '[$time_local] $remote_addr - $remote_user - $server_name  to: $upstream_addr: $request upstream_response_time $upstream_response_time msec $msec request_time $request_time';
+
+    include /usr/local/openresty/nginx/conf/mime.types;
+    sendfile on;
+
+    access_log /dev/stdout main;
+    lua_package_path "/usr/local/openresty/lualib/?.lua;;";
+
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=cache:32m max_size=1g;
+
+    {% for upstream in all_upstreams %}
+    upstream {{ upstream.name }} {
+        server {{ upstream.url }};
+    }
+    {% endfor %}
+
+    {% for subdomain in all_subdomains %}
+    server {
+        listen 8080;
+        server_name {{ subdomain.url }};
+
+        # static locations
+        {% if subdomain.static_root %}
+        location / {
+            root {{ subdomain.static_root }};
+            try_files $uri$args $uri$args/ /index.html;
+            autoindex off;
+            access_log off;
+            expires max;
+        }
+        {% endif %}
+        # api locations
+        {% for location in subdomain.locations %}
+        location ~ {{ location.regex }} {
+            {% if not location.nosecurity %}
+            access_by_lua '
+                local jwt = require("security-jwt")
+                {% if location.roles %}
+                jwt.check({ "{{ location.roles | join('", "') }}" })
+                {% else %}
+                jwt.check()
+                {% endif %}
+            ';
+            {% endif %}
+            {% if location.cache %}
+            proxy_cache cache;
+            proxy_cache_valid {{ location.cache }};
+            {% endif %}
+            proxy_pass http://{{ location.upstream.name }}$1$is_args$args;
+        }
+        {% endfor %}
+        location ~* ^/api {
+            return 404;
+        }
+
+    }
+    {% endfor %}
+}

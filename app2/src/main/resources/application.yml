@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: app1
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus'
+
+server:
+  port: 8092

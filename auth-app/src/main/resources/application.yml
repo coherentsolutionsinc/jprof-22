@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: authapp
+
+server:
+  port: 8090
+
+application:
+  oauth:
+    keystore-resource: classpath:jwt.jks
+    keystore-password: 123456
+    key-alias: jwt
+    client-id: browser
+    client-secret: $2a$10$V/cLZ8etnftBjB7S.pCRtebfNm//Gj359K3w9HKk9nAlJuchSwwBW

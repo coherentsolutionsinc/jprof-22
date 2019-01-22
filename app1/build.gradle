@@ -1,0 +1,10 @@
+apply plugin: 'org.springframework.boot'
+
+description = 'app1'
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.9.RELEASE'
+    compile project(':proto')
+}

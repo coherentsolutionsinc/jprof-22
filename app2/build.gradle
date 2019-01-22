@@ -1,0 +1,13 @@
+apply plugin: 'org.springframework.boot'
+
+description = 'app2'
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb-reactive'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis-reactive'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
+    compile group: 'io.micrometer', name: 'micrometer-registry-prometheus'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compile project(':proto')
+}
