@@ -107,7 +107,7 @@ Requires docker:
 
 Manually copy file content into nginx.conf file and place it into /nginx/web
 
-### Run Nginx
+### 4.2 Run Nginx
 
 After nginx.conf is ready
 
